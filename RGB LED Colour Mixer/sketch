@@ -1,0 +1,57 @@
+int blue = 9;
+int green = 10;
+int red =11;
+
+int greenPot = A2;
+int bluePot = A1;
+int redPot = A0;
+
+int greenVal = 0;
+int blueVal = 0;
+int redVal = 0;
+
+const int BUTTON = 7;
+int state = 0;
+int val = 0;
+int old_val = 0;
+
+void setup() {
+  // put your setup code here, to run once:
+ 
+  pinMode(green, OUTPUT);
+  pinMode(blue, OUTPUT);
+  pinMode(red, OUTPUT);
+  pinMode(BUTTON, INPUT);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+  val = digitalRead(BUTTON);
+
+  if((val == HIGH) && (old_val == LOW)) {
+    state = 1 - state;
+    delay(10);
+  }
+
+  old_val = val;
+  
+  greenVal = analogRead(greenPot);
+  blueVal = analogRead(bluePot);
+  redVal = analogRead(redPot);
+
+  if(state == 1){
+    analogWrite(green, greenVal/4);
+  analogWrite(blue, blueVal/4);
+  analogWrite(red, redVal/4);
+  delay(50);
+  Serial.println(greenVal);
+  } else {
+    analogWrite(green, 0);
+  analogWrite(blue, 0);
+  analogWrite(red, 0);
+  delay(50);
+  }
+
+  
+}
