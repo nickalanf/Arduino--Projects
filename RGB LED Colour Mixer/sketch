@@ -2,9 +2,10 @@ int blue = 9; // Define Digital Pins for each colour of the LED
 int green = 10;
 int red = 11;
 
-int greenPot = A2; //Define Analog Pins for the 3 potentiometers
-int bluePot = A1;
 int redPot = A0;
+int greenPot = A1; //Define Analog Pins for the 3 potentiometers
+int bluePot = A2;
+
 
 int greenVal = 0; //Create a variable to store the state of each Potentiometer
 int blueVal = 0;
@@ -47,9 +48,14 @@ void loop() {
     analogWrite(blue, blueVal / 4);         // while anolog outputs as PMW can be from 0-255. Therefore we must
     analogWrite(red, redVal / 4);           // divide the potentiometer readings by 4 to set the state correctly
     
-    Serial.print(redVal); 
-    Serial.print(greenVal); 
-    Serial.println(blueVal);                 //Print the RGB Code, resuable in any RGB application
+    Serial.print("RGB(");
+    Serial.print(redVal/4); 
+    Serial.print(",");
+    Serial.print(greenVal/4); 
+    Serial.print(",");
+    Serial.print(blueVal/4);                 //Print the RGB Code, resuable in any RGB application
+    Serial.println(")");
+    
     delay(50);
   } else {                                   // If button is off, set all LED's to LOW/off
     analogWrite(green, 0);
