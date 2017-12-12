@@ -1,0 +1,123 @@
+/* Arduino Project - Infrared Logic Puzzle
+ * This Sketch Allows you to control the Digital Settings
+ * of 5 LED's. The challenge is to turn them all on
+ *
+ *  See Fritzing Diagram attached in Github
+ *
+ * Created on December 12 2017 by FIELDING
+ */
+ 
+
+
+
+
+#include <IRremote.h>  //Infrared Remote Library
+
+int RECV_PIN = 11;
+IRrecv irrecv(RECV_PIN);  //Setup the IR remote for initilisation
+decode_results results;   // set a decode variable, called results
+
+
+const int LED [] = {0, 7, 6, 5, 4, 3}; // Set LED's as Digital Pins 7 thru 3
+
+int LED_State[] = {0, 0, 0, 0, 0, 0, 0}; // Inlcude one more than the number of LED's
+// you have, first val must be zero. Sets all
+// LED's to low/off
+
+unsigned int val = 0; // A variable to store the IR reading
+
+const int code1 = 12495;   //Set the values recieved
+const int code2 = 6375;  //from the IR remote
+const int code3 = 31365;  //for your chosen buttons
+const int code4 = 4335;
+const int code5 = 14535;
+const int code6 = 41565;
+
+
+void setup() {
+
+  Serial.begin(9600); // Turn on to allow you to check your IR remote values
+
+  irrecv.enableIRIn(); // Start the IR receiver
+
+  for (int i = 1; i < 6; i++) { // Set all LED's as OUTPUTS
+    pinMode(LED[i], OUTPUT);
+  }
+}
+
+void loop() {
+
+  if (irrecv.decode(&results)) {  //If the IR receiver gets a signal
+    val = results.value;          //Save that signal as a value to 'val'
+    Serial.println(val);          //To check the values from your remote
+
+
+    switch (val) {
+      case code1:                   //If the IR reciever picks up code1
+        toggle2(1, 4);              //Toggle these LED's on/off
+        break;
+      case code2:                   //If the IR reciever picks up code2
+        toggle2(2, 3);              //Toggle these LED's on/off
+        break;
+      case code3:                   //If the IR reciever picks up code3
+        toggle3(3, 4, 5);              //Toggle these LED's on/off
+        break;
+      case code4:                   //If the IR reciever picks up code4
+        toggle3(1, 4, 5);              //Toggle these LED's on/off
+        break;
+      case code5:                   //If the IR reciever picks up code5
+        toggle3(1, 3, 4);              //Toggle these LED's on/off
+        break ;
+      case code6 :
+        for (int i = 1; i < 6; i++) { // If Code 6 is received, all LED's are
+          digitalWrite(LED[i], LOW);   // turned off
+          LED_State[i] = 0;
+        }
+        break ;
+    }
+    irrecv.resume(); // Recieve the Next value
+  }
+}
+
+//Create a function to toggle two LED's on/off
+void toggle2(int x, int y) {    //Set x and y as two of the LED's (mix it up!)
+  if (LED_State[x] == 0) {       //check to see if LED is currently on low/off
+    digitalWrite(LED[x], HIGH);   // if its off, turn it on
+    LED_State[x] = 1;
+  } else {
+    digitalWrite(LED[x], LOW);    // if its on, turn it off
+    LED_State[x] = 0;
+  }
+  if (LED_State[y] == 0) {       //check to see if LED is currently on low/off
+    digitalWrite(LED[y], HIGH);   // if its off, turn it on
+    LED_State[y] = 1;
+  } else {
+    digitalWrite(LED[y], LOW);    // if its on, turn it off
+    LED_State[y] = 0;
+  }
+}
+
+//Create a function to toggle three LED's on/off
+void toggle3(int x, int y, int z) {     //Set x and y as two of the LED's (mix it up!)
+  if (LED_State[x] == 0) {              //check to see if LED is currently on low/off
+    digitalWrite(LED[x], HIGH);         // if its off, turn it on
+    LED_State[x] = 1;
+  } else {
+    digitalWrite(LED[x], LOW);    // if its on, turn it off
+    LED_State[x] = 0;
+  }
+  if (LED_State[y] == 0) {       //check to see if LED is currently on low/off
+    digitalWrite(LED[y], HIGH);   // if its off, turn it on
+    LED_State[y] = 1;
+  } else {
+    digitalWrite(LED[y], LOW);    // if its on, turn it off
+    LED_State[y] = 0;
+  }
+  if (LED_State[z] == 0) {       //check to see if LED is currently on low/off
+    digitalWrite(LED[z], HIGH);   // if its off, turn it on
+    LED_State[z] = 1;
+  } else {
+    digitalWrite(LED[z], LOW);    // if its on, turn it off
+    LED_State[z] = 0;
+  }
+}
